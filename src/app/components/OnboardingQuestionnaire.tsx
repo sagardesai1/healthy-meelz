@@ -123,7 +123,7 @@ export default function OnboardingQuestionnaire() {
     // Prevent going to future steps if required fields aren't filled
     if (
       stepIndex === 1 &&
-      !formData.phoneNumber.replace(/^\+\d+/, "").length >= 7
+      !(formData.phoneNumber.replace(/^\+\d+/, "").length >= 7)
     ) {
       return; // Can't go to contact step without phone number
     }
