@@ -104,7 +104,7 @@ export default function DietaryStep({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search dietary preferences..."
-              className="w-full px-4 py-3 pl-12 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors"
+              className="w-full px-4 py-3 pl-12 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors text-sage-900"
             />
             <svg
               className="w-5 h-5 text-sage-400 absolute left-4 top-1/2 transform -translate-y-1/2"

@@ -114,9 +114,7 @@ export default function TimePreferencesStep({
                 p-6 rounded-xl border-2 text-left transition-all duration-200 hover:transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sage-300
                 ${
                   formData.mealPrepTime === option.id
-                    ? "border-sage-500 bg-gradient-to-r " +
-                      option.color +
-                      " text-white shadow-lg"
+                    ? "border-sage-500 bg-sage-100 text-sage-800 shadow-lg"
                     : "border-sage-200 bg-white text-sage-700 hover:border-sage-300 hover:bg-sage-50"
                 }
               `}
@@ -128,7 +126,7 @@ export default function TimePreferencesStep({
                   <p
                     className={`text-sm ${
                       formData.mealPrepTime === option.id
-                        ? "text-white/90"
+                        ? "text-sage-700"
                         : "text-sage-600"
                     }`}
                   >
@@ -136,7 +134,7 @@ export default function TimePreferencesStep({
                   </p>
                 </div>
                 {formData.mealPrepTime === option.id && (
-                  <div className="text-white">
+                  <div className="text-sage-600">
                     <svg
                       className="w-6 h-6"
                       fill="none"

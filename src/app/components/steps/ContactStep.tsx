@@ -15,19 +15,6 @@ interface ContactStepProps {
   isLoading: boolean;
 }
 
-const countryCodes = [
-  { code: "+1", country: "US/CA" },
-  { code: "+44", country: "UK" },
-  { code: "+61", country: "AU" },
-  { code: "+91", country: "IN" },
-  { code: "+86", country: "CN" },
-  { code: "+81", country: "JP" },
-  { code: "+49", country: "DE" },
-  { code: "+33", country: "FR" },
-  { code: "+39", country: "IT" },
-  { code: "+34", country: "ES" },
-];
-
 export default function ContactStep({
   formData,
   updateFormData,
@@ -35,16 +22,13 @@ export default function ContactStep({
   onPrev,
   isLoading,
 }: ContactStepProps) {
-  const [selectedCountryCode, setSelectedCountryCode] = useState("+1");
-  const [showCountrySelector, setShowCountrySelector] = useState(false);
   const [phoneError, setPhoneError] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
 
   // Initialize phone input only once when component mounts
   useEffect(() => {
     if (formData.phoneNumber && !phoneInput) {
-      const phoneWithoutCode = formData.phoneNumber.replace(/^\+\d+/, "");
-      setPhoneInput(phoneWithoutCode);
+      setPhoneInput(formData.phoneNumber);
     }
   }, []); // Empty dependency array - only run once
 
@@ -57,21 +41,11 @@ export default function ContactStep({
 
     setPhoneInput(cleaned);
 
-    // Update form data with full phone number
-    const fullPhoneNumber = selectedCountryCode + cleaned;
-    updateFormData({ phoneNumber: fullPhoneNumber });
+    // Update form data with phone number
+    updateFormData({ phoneNumber: cleaned });
 
     // Clear error when user starts typing
     if (phoneError) setPhoneError("");
-  };
-
-  const handleCountryCodeSelect = (code: string) => {
-    setSelectedCountryCode(code);
-    setShowCountrySelector(false);
-
-    // Update phone number with new country code
-    const fullPhoneNumber = code + phoneInput;
-    updateFormData({ phoneNumber: fullPhoneNumber });
   };
 
   const validatePhoneNumber = () => {
@@ -138,63 +112,16 @@ export default function ContactStep({
             For personalized grocery lists and meal planning support
           </p>
 
-          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-            {/* Country Code Selector */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowCountrySelector(!showCountrySelector)}
-                className="w-full sm:w-auto flex items-center justify-center sm:justify-start space-x-2 px-3 py-3 border border-sage-300 rounded-lg bg-white hover:bg-sage-50 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors"
-              >
-                <span className="text-sage-700 font-medium">
-                  {selectedCountryCode}
-                </span>
-                <svg
-                  className="w-4 h-4 text-sage-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {showCountrySelector && (
-                <div className="absolute top-full left-0 mt-1 w-full sm:w-48 bg-white border border-sage-200 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
-                  {countryCodes.map((country) => (
-                    <button
-                      key={country.code}
-                      onClick={() => handleCountryCodeSelect(country.code)}
-                      className="w-full px-4 py-2 text-left hover:bg-sage-50 focus:bg-sage-50 focus:outline-none transition-colors"
-                    >
-                      <span className="font-medium text-sage-700">
-                        {country.code}
-                      </span>
-                      <span className="text-sm text-sage-500 ml-2">
-                        ({country.country})
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Phone Number Input */}
-            <input
-              type="tel"
-              value={formatPhoneDisplay(phoneInput)}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              placeholder="(555) 123-4567"
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors ${
-                phoneError ? "border-red-300" : "border-sage-300"
-              }`}
-            />
-          </div>
+          {/* Phone Number Input */}
+          <input
+            type="tel"
+            value={formatPhoneDisplay(phoneInput)}
+            onChange={(e) => handlePhoneChange(e.target.value)}
+            placeholder="(555) 123-4567"
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors text-sage-900 ${
+              phoneError ? "border-red-300" : "border-sage-300"
+            }`}
+          />
 
           {/* Error Message */}
           {phoneError && (

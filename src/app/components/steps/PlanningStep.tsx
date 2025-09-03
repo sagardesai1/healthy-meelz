@@ -77,10 +77,10 @@ export default function PlanningStep({
                 key={day.value}
                 onClick={() => handleDaySelect(day.value)}
                 className={`
-                  p-4 rounded-xl border-2 transition-all duration-200 text-center hover:transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sage-300
+                  p-4 rounded-xl border-2 text-center transition-all duration-200 hover:transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sage-300
                   ${
                     formData.planningDay === day.value
-                      ? "border-coral-500 bg-coral-50 text-coral-800 shadow-lg"
+                      ? "border-sage-500 bg-sage-100 text-sage-800 shadow-lg"
                       : "border-sage-200 bg-white text-sage-700 hover:border-sage-300 hover:bg-sage-50"
                   }
                 `}

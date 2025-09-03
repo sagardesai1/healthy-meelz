@@ -94,7 +94,7 @@ export default function FoodPreferencesStep({
             value={formData.goToMeals}
             onChange={(e) => handleGoToMealsChange(e.target.value)}
             placeholder="E.g., scrambled eggs with toast, pasta with olive oil, roasted vegetables, smoothies with banana..."
-            className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none"
+            className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none text-sage-900"
             rows={6}
           />
 

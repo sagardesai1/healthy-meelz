@@ -137,9 +137,7 @@ export default function GoalsStep({
                 p-6 rounded-xl border-2 text-left transition-all duration-200 hover:transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sage-300
                 ${
                   formData.goals.includes(goal.id)
-                    ? "border-sage-500 bg-gradient-to-r " +
-                      goal.color +
-                      " text-white shadow-lg"
+                    ? "border-sage-500 bg-sage-100 text-sage-800 shadow-lg"
                     : "border-sage-200 bg-white text-sage-700 hover:border-sage-300 hover:bg-sage-50"
                 }
               `}
@@ -151,7 +149,7 @@ export default function GoalsStep({
                   <p
                     className={`text-sm ${
                       formData.goals.includes(goal.id)
-                        ? "text-white/90"
+                        ? "text-sage-700"
                         : "text-sage-600"
                     }`}
                   >
@@ -159,7 +157,7 @@ export default function GoalsStep({
                   </p>
                 </div>
                 {formData.goals.includes(goal.id) && (
-                  <div className="text-white">
+                  <div className="text-sage-600">
                     <svg
                       className="w-6 h-6"
                       fill="none"
@@ -203,7 +201,7 @@ export default function GoalsStep({
                 value={formData.otherGoal}
                 onChange={(e) => handleOtherGoalChange(e.target.value)}
                 placeholder="What else would feel supportive for your nourishment journey?"
-                className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none"
+                className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none text-sage-900"
                 rows={3}
               />
             </motion.div>

@@ -103,6 +103,11 @@ export default function OnboardingQuestionnaire() {
     localStorage.setItem("wellness-onboarding", JSON.stringify(formData));
   }, [formData]);
 
+  // Scroll to top whenever step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentStep]);
+
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
   };

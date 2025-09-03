@@ -35,32 +35,32 @@ export default function HouseholdStep({
   const handleMealPeopleChange = (mealId: string, people: number) => {
     const currentMeals = formData.mealsPrepared;
     const currentPeople = formData.mealPeopleCounts?.[mealId] || 0;
-    
+
     // If selecting people for a meal, add it to mealsPrepared
     if (people > 0 && !currentMeals.includes(mealId)) {
       updateFormData({
         mealsPrepared: [...currentMeals, mealId],
         mealPeopleCounts: {
           ...formData.mealPeopleCounts,
-          [mealId]: people
-        }
+          [mealId]: people,
+        },
       });
     } else if (people === 0) {
       // If setting to 0, remove from mealsPrepared
       updateFormData({
-        mealsPrepared: currentMeals.filter(id => id !== mealId),
+        mealsPrepared: currentMeals.filter((id) => id !== mealId),
         mealPeopleCounts: {
           ...formData.mealPeopleCounts,
-          [mealId]: 0
-        }
+          [mealId]: 0,
+        },
       });
     } else {
       // Just update the people count
       updateFormData({
         mealPeopleCounts: {
           ...formData.mealPeopleCounts,
-          [mealId]: people
-        }
+          [mealId]: people,
+        },
       });
     }
   };
@@ -102,32 +102,41 @@ export default function HouseholdStep({
         {/* Meals with People Count */}
         <div className="space-y-6 mb-8">
           {mealOptions.map((meal) => (
-            <div key={meal.id} className="bg-white rounded-xl p-6 border border-sage-200">
+            <div
+              key={meal.id}
+              className="bg-white rounded-xl p-6 border border-sage-200"
+            >
               <div className="flex items-center space-x-4 mb-4">
                 <div className="text-3xl">{meal.icon}</div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-sage-800">{meal.label}</h3>
+                  <h3 className="text-xl font-semibold text-sage-800">
+                    {meal.label}
+                  </h3>
                   <p className="text-sage-600">{meal.description}</p>
                 </div>
               </div>
-              
+
               <div className="text-center">
                 <p className="text-sage-700 mb-4 font-medium">
                   How many people do you cook {meal.label.toLowerCase()} for?
                 </p>
-                
+
                 <div className="flex justify-center flex-wrap gap-3">
                   {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "10+"].map((size) => (
                     <button
                       key={size}
-                      onClick={() => handleMealPeopleChange(meal.id, typeof size === "number" ? size : 10)}
+                      onClick={() =>
+                        handleMealPeopleChange(
+                          meal.id,
+                          typeof size === "number" ? size : 10
+                        )
+                      }
                       className={`
                         w-14 h-14 rounded-full border-2 font-bold text-lg transition-all duration-200 hover:transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-sage-300
                         ${
-                          (formData.mealPeopleCounts?.[meal.id] || 0) === (typeof size === "number" ? size : 10)
-                            ? "border-coral-500 bg-coral-500 text-white shadow-lg"
-                            : size === 0
-                            ? "border-sage-200 bg-sage-100 text-sage-600"
+                          (formData.mealPeopleCounts?.[meal.id] || 0) ===
+                          (typeof size === "number" ? size : 10)
+                            ? "border-sage-500 bg-sage-100 text-sage-800 shadow-lg"
                             : "border-sage-200 bg-white text-sage-700 hover:border-sage-300 hover:bg-sage-50"
                         }
                       `}
@@ -136,10 +145,14 @@ export default function HouseholdStep({
                     </button>
                   ))}
                 </div>
-                
+
                 {formData.mealPeopleCounts?.[meal.id] > 0 && (
-                  <p className="text-coral-600 mt-3 font-medium">
-                    Cooking {meal.label.toLowerCase()} for {formData.mealPeopleCounts[meal.id]} {formData.mealPeopleCounts[meal.id] === 1 ? "person" : "people"}
+                  <p className="text-sage-700 mt-3 font-medium">
+                    Cooking {meal.label.toLowerCase()} for{" "}
+                    {formData.mealPeopleCounts[meal.id]}{" "}
+                    {formData.mealPeopleCounts[meal.id] === 1
+                      ? "person"
+                      : "people"}
                   </p>
                 )}
               </div>
