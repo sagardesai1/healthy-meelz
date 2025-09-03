@@ -72,16 +72,30 @@ body {
   line-height: 1.6;
 }
 
-/* Fix mobile text input color - only the typed text */
+/* Fix mobile text input color issues */
 input, textarea, select {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+  color: var(--foreground) !important;
+  -webkit-text-fill-color: var(--foreground) !important;
 }
 
-/* Keep placeholder text in default gray color */
+/* Ensure proper text color on mobile devices */
+@media (max-width: 768px) {
+  input, textarea, select {
+    color: var(--foreground) !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+  }
+  
+  /* Override any mobile browser default gray text */
+  input::placeholder, textarea::placeholder {
+    color: #9ca3af !important;
+    -webkit-text-fill-color: #9ca3af !important;
+  }
+}
+
+/* Ensure consistent gray placeholders on all screen sizes */
 input::placeholder, textarea::placeholder {
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
 }
 
 /* Custom scrollbar */
