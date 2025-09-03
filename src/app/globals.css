@@ -72,12 +72,6 @@ body {
   line-height: 1.6;
 }
 
-/* Ensure consistent gray placeholders on all screen sizes */
-input::placeholder, textarea::placeholder {
-  color: #9ca3af !important;
-  -webkit-text-fill-color: #9ca3af !important;
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
