@@ -72,14 +72,6 @@ body {
   line-height: 1.6;
 }
 
-/* Ensure proper text color on mobile devices */
-@media (max-width: 768px) {
-  input, textarea, select {
-    color: var(--foreground) !important;
-    -webkit-text-fill-color: var(--foreground) !important;
-  }
-}
-
 /* Ensure consistent gray placeholders on all screen sizes */
 input::placeholder, textarea::placeholder {
   color: #9ca3af !important;
