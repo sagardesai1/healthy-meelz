@@ -72,23 +72,11 @@ body {
   line-height: 1.6;
 }
 
-/* Fix mobile text input color issues */
-input, textarea, select {
-  color: var(--foreground) !important;
-  -webkit-text-fill-color: var(--foreground) !important;
-}
-
 /* Ensure proper text color on mobile devices */
 @media (max-width: 768px) {
   input, textarea, select {
     color: var(--foreground) !important;
     -webkit-text-fill-color: var(--foreground) !important;
-  }
-  
-  /* Override any mobile browser default gray text */
-  input::placeholder, textarea::placeholder {
-    color: #9ca3af !important;
-    -webkit-text-fill-color: #9ca3af !important;
   }
 }
 
