@@ -187,7 +187,7 @@ export default function DietaryStep({
                 value={formData.otherRestrictions}
                 onChange={(e) => handleOtherRestrictionsChange(e.target.value)}
                 placeholder="Tell us about any other foods you avoid or can't eat..."
-                className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none"
+                className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none text-sage-900"
                 rows={3}
               />
             </motion.div>
