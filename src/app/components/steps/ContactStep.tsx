@@ -98,17 +98,17 @@ export default function ContactStep({
   const canProceed = phoneInput.length === 10;
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-sage-400 to-coral-400 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-sage-400 to-coral-400 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
-              className="w-8 h-8 text-white"
+              className="w-7 h-7 sm:w-8 sm:h-8 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -121,16 +121,16 @@ export default function ContactStep({
               />
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-sage-800 mb-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-sage-800 mb-3">
             Stay Connected
           </h2>
-          <p className="text-lg text-sage-700">
+          <p className="text-base sm:text-lg text-sage-700">
             We'll send you personalized grocery lists and meal planning support
           </p>
         </div>
 
         {/* Phone Number Input */}
-        <div className="bg-white rounded-xl p-6 border border-sage-200 mb-8">
+        <div className="bg-white rounded-xl p-4 sm:p-6 border border-sage-200 mb-8">
           <label className="block text-sm font-medium text-sage-700 mb-2">
             Phone Number <span className="text-red-500">*</span>
           </label>
@@ -138,13 +138,13 @@ export default function ContactStep({
             For personalized grocery lists and meal planning support
           </p>
 
-          <div className="flex space-x-3">
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
             {/* Country Code Selector */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowCountrySelector(!showCountrySelector)}
-                className="flex items-center space-x-2 px-3 py-3 border border-sage-300 rounded-lg bg-white hover:bg-sage-50 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center sm:justify-start space-x-2 px-3 py-3 border border-sage-300 rounded-lg bg-white hover:bg-sage-50 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors"
               >
                 <span className="text-sage-700 font-medium">
                   {selectedCountryCode}
@@ -165,7 +165,7 @@ export default function ContactStep({
               </button>
 
               {showCountrySelector && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-sage-200 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 mt-1 w-full sm:w-48 bg-white border border-sage-200 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
                   {countryCodes.map((country) => (
                     <button
                       key={country.code}
@@ -190,7 +190,7 @@ export default function ContactStep({
               value={formatPhoneDisplay(phoneInput)}
               onChange={(e) => handlePhoneChange(e.target.value)}
               placeholder="(555) 123-4567"
-              className={`flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors ${
+              className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors ${
                 phoneError ? "border-red-300" : "border-sage-300"
               }`}
             />
