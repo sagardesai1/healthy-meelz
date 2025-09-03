@@ -72,10 +72,16 @@ body {
   line-height: 1.6;
 }
 
-/* Fix mobile text input color - only the typed text, not placeholders */
+/* Fix mobile text input color - only the typed text */
 input, textarea, select {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
+}
+
+/* Keep placeholder text in default gray color */
+input::placeholder, textarea::placeholder {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
 }
 
 /* Custom scrollbar */
