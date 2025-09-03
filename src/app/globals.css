@@ -3,6 +3,29 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Custom color palette */
+  --color-sage-50: #f6f7f6;
+  --color-sage-100: #e8ebe8;
+  --color-sage-200: #d1d7d1;
+  --color-sage-300: #b3c0b3;
+  --color-sage-400: #8fa08f;
+  --color-sage-500: #6b7f6b;
+  --color-sage-600: #556655;
+  --color-sage-700: #454d45;
+  --color-sage-800: #3a413a;
+  --color-sage-900: #2f352f;
+  
+  --color-coral-50: #fef7f6;
+  --color-coral-100: #fdeeea;
+  --color-coral-200: #fbd5ce;
+  --color-coral-300: #f8b3a6;
+  --color-coral-400: #f4856f;
+  --color-coral-500: #f05a3d;
+  --color-coral-600: #e13d1f;
+  --color-coral-700: #bc2f1a;
+  --color-coral-800: #96271a;
+  --color-coral-900: #7a2418;
 }
 
 @theme inline {
@@ -10,6 +33,29 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Custom colors */
+  --color-sage-50: var(--color-sage-50);
+  --color-sage-100: var(--color-sage-100);
+  --color-sage-200: var(--color-sage-200);
+  --color-sage-300: var(--color-sage-300);
+  --color-sage-400: var(--color-sage-400);
+  --color-sage-500: var(--color-sage-500);
+  --color-sage-600: var(--color-sage-600);
+  --color-sage-700: var(--color-sage-700);
+  --color-sage-800: var(--color-sage-800);
+  --color-sage-900: var(--color-sage-900);
+  
+  --color-coral-50: var(--color-coral-50);
+  --color-coral-100: var(--color-coral-100);
+  --color-coral-200: var(--color-coral-200);
+  --color-coral-300: var(--color-coral-300);
+  --color-coral-400: var(--color-coral-400);
+  --color-coral-500: var(--color-coral-500);
+  --color-coral-600: var(--color-coral-600);
+  --color-coral-700: var(--color-coral-700);
+  --color-coral-800: var(--color-coral-800);
+  --color-coral-900: var(--color-coral-900);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +68,34 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-sage-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-sage-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sage-400);
+}
+
+/* Focus styles */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-sage-500);
+  outline-offset: 2px;
 }
