@@ -11,8 +11,10 @@ import HouseholdStep from "./steps/HouseholdStep";
 import FoodPreferencesStep from "./steps/FoodPreferencesStep";
 import TimePreferencesStep from "./steps/TimePreferencesStep";
 import JoyFoodsStep from "./steps/JoyFoodsStep";
+import DemographicsStep from "./steps/DemographicsStep";
 import SummaryStep from "./steps/SummaryStep";
 import ProgressIndicator from "./ProgressIndicator";
+import { saveUserProfile } from "../../lib/userService";
 
 export interface FormData {
   // Contact Information
@@ -36,12 +38,39 @@ export interface FormData {
 
   // Food Preferences
   goToMeals: string;
+  breakfastIngredients: string[];
+  lunchIngredients: string[];
+  dinnerIngredients: string[];
 
   // Time Preferences
   mealPrepTime: string;
 
   // Joy Foods
   joyFoods: string[];
+
+  // Demographics & Goals
+  age: number;
+  gender: string;
+  height: {
+    feet: number;
+    inches: number;
+  };
+  weight: number;
+  activityLevel: string;
+  goal: string;
+
+  // Calculated Macro Goals
+  macroGoals?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    proteinGrams: number;
+    carbsGrams: number;
+    fatGrams: number;
+    bmr: number;
+    tdee: number;
+  };
 }
 
 const initialFormData: FormData = {
@@ -55,8 +84,20 @@ const initialFormData: FormData = {
   mealsPrepared: [],
   mealPeopleCounts: {},
   goToMeals: "",
+  breakfastIngredients: [],
+  lunchIngredients: [],
+  dinnerIngredients: [],
   mealPrepTime: "",
   joyFoods: [],
+  age: 0,
+  gender: "",
+  height: {
+    feet: 0,
+    inches: 0,
+  },
+  weight: 0,
+  activityLevel: "",
+  goal: "",
 };
 
 const steps = [
@@ -77,6 +118,7 @@ const steps = [
     component: TimePreferencesStep,
   },
   { id: "joy-foods", title: "Joy Foods", component: JoyFoodsStep },
+  { id: "demographics", title: "Demographics", component: DemographicsStep },
   { id: "summary", title: "Complete", component: SummaryStep },
 ];
 
@@ -137,11 +179,23 @@ export default function OnboardingQuestionnaire() {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    // Here you would typically send the data to your backend
-    console.log("Form submitted:", formData);
+    try {
+      // Save user data to Firebase
+      const userId = await saveUserProfile(formData);
+      console.log("User profile saved successfully with ID:", userId);
+
+      // Simulate additional processing time
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Here you would typically redirect to a success page or dashboard
+      // For now, we'll just log the success
+      console.log("Form submitted and saved to Firebase:", formData);
+    } catch (error) {
+      console.error("Error saving user profile:", error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const CurrentStepComponent = steps[currentStep].component;

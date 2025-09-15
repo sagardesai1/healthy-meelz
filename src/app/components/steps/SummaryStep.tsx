@@ -280,20 +280,12 @@ export default function SummaryStep({
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        <div className="flex justify-center">
           <button
             onClick={onPrev}
             className="px-6 py-3 text-sage-600 hover:text-sage-800 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-sage-300 rounded-lg"
           >
             ← Back
-          </button>
-
-          <button
-            onClick={onSubmit}
-            disabled={isLoading}
-            className="bg-gradient-to-r from-sage-500 to-coral-500 hover:from-sage-600 hover:to-coral-600 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sage-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          >
-            {isLoading ? "Creating Your Experience..." : "Complete & Continue"}
           </button>
         </div>
 

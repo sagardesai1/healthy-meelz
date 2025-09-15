@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FormData } from "../OnboardingQuestionnaire";
+import { useState } from "react";
 
 interface FoodPreferencesStepProps {
   formData: FormData;
@@ -14,17 +15,27 @@ interface FoodPreferencesStepProps {
   isLoading: boolean;
 }
 
-const exampleFoods = [
-  "scrambled eggs with toast",
-  "pasta with olive oil",
-  "roasted vegetables",
-  "smoothies with banana",
-  "grilled chicken salad",
-  "soup and crackers",
-  "yogurt with berries",
-  "rice and beans",
-  "avocado toast",
-  "simple stir-fry",
+const commonIngredients = [
+  "eggs",
+  "bread",
+  "oatmeal",
+  "yogurt",
+  "banana",
+  "berries",
+  "avocado",
+  "chicken",
+  "rice",
+  "pasta",
+  "olive oil",
+  "cheese",
+  "tomatoes",
+  "spinach",
+  "onions",
+  "garlic",
+  "quinoa",
+  "beans",
+  "salmon",
+  "sweet potato",
 ];
 
 export default function FoodPreferencesStep({
@@ -34,22 +45,137 @@ export default function FoodPreferencesStep({
   onPrev,
   isLoading,
 }: FoodPreferencesStepProps) {
-  const handleGoToMealsChange = (value: string) => {
-    updateFormData({ goToMeals: value });
+  const [newIngredient, setNewIngredient] = useState("");
+
+  const addIngredient = (
+    mealType: "breakfast" | "lunch" | "dinner",
+    ingredient: string
+  ) => {
+    const currentIngredients =
+      (formData[`${mealType}Ingredients` as keyof FormData] as string[]) || [];
+    if (currentIngredients.includes(ingredient)) return;
+
+    updateFormData({
+      [`${mealType}Ingredients`]: [...currentIngredients, ingredient],
+    });
   };
 
-  const addExampleFood = (food: string) => {
-    const currentFoods = formData.goToMeals;
-    if (currentFoods.includes(food)) return;
-
-    const separator = currentFoods ? ", " : "";
-    updateFormData({ goToMeals: currentFoods + separator + food });
+  const removeIngredient = (
+    mealType: "breakfast" | "lunch" | "dinner",
+    ingredient: string
+  ) => {
+    const currentIngredients =
+      (formData[`${mealType}Ingredients` as keyof FormData] as string[]) || [];
+    updateFormData({
+      [`${mealType}Ingredients`]: currentIngredients.filter(
+        (item) => item !== ingredient
+      ),
+    });
   };
 
-  const canProceed = formData.goToMeals.trim() !== "";
+  const handleAddCustomIngredient = (
+    mealType: "breakfast" | "lunch" | "dinner"
+  ) => {
+    if (newIngredient.trim()) {
+      addIngredient(mealType, newIngredient.trim());
+      setNewIngredient("");
+    }
+  };
+
+  const canProceed =
+    (formData.breakfastIngredients?.length || 0) > 0 ||
+    (formData.lunchIngredients?.length || 0) > 0 ||
+    (formData.dinnerIngredients?.length || 0) > 0;
+
+  const renderMealSection = (
+    mealType: "breakfast" | "lunch" | "dinner",
+    title: string,
+    emoji: string,
+    placeholder: string
+  ) => {
+    const ingredients =
+      (formData[`${mealType}Ingredients` as keyof FormData] as string[]) || [];
+
+    return (
+      <div className="bg-white rounded-xl p-6 border border-sage-200 mb-6">
+        <div className="flex items-center mb-4">
+          <span className="text-2xl mr-3">{emoji}</span>
+          <h3 className="text-xl font-semibold text-sage-800">{title}</h3>
+        </div>
+
+        <p className="text-sage-600 mb-4">
+          What ingredients do you typically use for {mealType}?
+        </p>
+
+        {/* Selected Ingredients */}
+        {ingredients.length > 0 && (
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-2">
+              {ingredients.map((ingredient) => (
+                <span
+                  key={ingredient}
+                  className="inline-flex items-center px-3 py-2 bg-sage-100 text-sage-800 rounded-full text-sm"
+                >
+                  {ingredient}
+                  <button
+                    onClick={() => removeIngredient(mealType, ingredient)}
+                    className="ml-2 text-sage-600 hover:text-sage-800 focus:outline-none"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Common Ingredients */}
+        <div className="mb-4">
+          <h4 className="text-sm font-medium text-sage-700 mb-2">
+            Common ingredients:
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {commonIngredients.map((ingredient) => (
+              <button
+                key={ingredient}
+                onClick={() => addIngredient(mealType, ingredient)}
+                disabled={ingredients.includes(ingredient)}
+                className="px-3 py-2 bg-sage-50 border border-sage-200 rounded-full text-sm text-sage-700 hover:border-sage-400 hover:bg-sage-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {ingredient}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Custom Ingredient Input */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newIngredient}
+            onChange={(e) => setNewIngredient(e.target.value)}
+            placeholder={placeholder}
+            className="flex-1 p-3 border border-sage-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sage-900"
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleAddCustomIngredient(mealType);
+              }
+            }}
+          />
+          <button
+            onClick={() => handleAddCustomIngredient(mealType)}
+            disabled={!newIngredient.trim()}
+            className="px-4 py-3 bg-sage-500 text-white rounded-lg hover:bg-sage-600 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -73,62 +199,42 @@ export default function FoodPreferencesStep({
             </svg>
           </div>
           <h2 className="text-3xl font-bold text-sage-800 mb-3">
-            Foods That Feel Good
+            Your Go-to Meals & Ingredients
           </h2>
           <p className="text-lg text-sage-700">
-            What are some foods or meals that always feel good to you?
+            Tell us about the ingredients you use for breakfast, lunch, and
+            dinner
           </p>
         </div>
 
-        {/* Main Input */}
-        <div className="bg-white rounded-xl p-6 border border-sage-200 mb-8">
-          <label className="block text-sm font-medium text-sage-700 mb-3">
-            Your Go-to Meals & Staples
-          </label>
-          <p className="text-sage-600 mb-4">
-            These will help us personalize suggestions that feel familiar and
-            comforting
-          </p>
-
-          <textarea
-            value={formData.goToMeals}
-            onChange={(e) => handleGoToMealsChange(e.target.value)}
-            placeholder="E.g., scrambled eggs with toast, pasta with olive oil, roasted vegetables, smoothies with banana..."
-            className="w-full p-4 border border-sage-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors resize-none text-sage-900"
-            rows={6}
-          />
-
-          <p className="text-xs text-sage-500 mt-2">
-            Don't worry about being specific - just share what comes to mind
-          </p>
+        {/* Main Content */}
+        <div className="space-y-6">
+          {renderMealSection(
+            "breakfast",
+            "Breakfast",
+            "🌅",
+            "Add a breakfast ingredient..."
+          )}
+          {renderMealSection(
+            "lunch",
+            "Lunch",
+            "🌞",
+            "Add a lunch ingredient..."
+          )}
+          {renderMealSection(
+            "dinner",
+            "Dinner",
+            "🌙",
+            "Add a dinner ingredient..."
+          )}
         </div>
 
-        {/* Example Foods */}
-        <div className="bg-sage-50 rounded-xl p-6 mb-8">
-          <h3 className="font-semibold text-sage-800 mb-4 text-center">
-            💡 Need some inspiration? Try these:
-          </h3>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {exampleFoods.map((food) => (
-              <button
-                key={food}
-                onClick={() => addExampleFood(food)}
-                className="px-3 py-2 bg-white border border-sage-200 rounded-full text-sm text-sage-700 hover:border-sage-400 hover:bg-sage-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-300"
-              >
-                {food}
-              </button>
-            ))}
-          </div>
-          <p className="text-center text-sage-600 mt-4 text-sm">
-            Click any food above to add it to your list
-          </p>
-        </div>
-
-        {/* Encouraging Message */}
+        {/* Personalized Message */}
         <div className="bg-coral-50 rounded-xl p-6 mb-8 text-center">
           <p className="text-coral-800 font-medium">
-            "The foods that feel good to you are your body's way of saying
-            'thank you.' Honor that wisdom."
+            We are crafting the most personalized meals for you based on the
+            ingredients and meals you love, and also making swaps easier for you
+            so you're not eating the same foods.
           </p>
         </div>
 
@@ -138,9 +244,8 @@ export default function FoodPreferencesStep({
             🌟 Remember
           </h3>
           <p className="text-sage-700 text-center">
-            There are no "good" or "bad" foods here. We're celebrating what
-            nourishes your body and brings you comfort. Your preferences are
-            perfect exactly as they are.
+            The more specific you are about your ingredients, the better we can
+            tailor our recommendations to your preferences and dietary needs.
           </p>
         </div>
 

@@ -86,7 +86,7 @@ export default function DietaryStep({
             </svg>
           </div>
           <h2 className="text-3xl font-bold text-sage-800 mb-3">
-            Foods That Work for Your Body
+            Your Dietary Preferences
           </h2>
           <p className="text-lg text-sage-700">
             Are there any foods you avoid or can't eat?

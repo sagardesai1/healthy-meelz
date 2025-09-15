@@ -44,10 +44,11 @@ export default function WelcomeStep({ onNext, isLoading }: WelcomeStepProps) {
         </h2>
 
         <p className="text-lg text-sage-700 mb-8 leading-relaxed">
-          We're so glad you're here. This questionnaire is designed to help us
-          understand your unique relationship with food and create a
-          personalized experience that honors your body, your preferences, and
-          your journey.
+          We're so glad you're here. The details of your answers will help us
+          create a weekly plan that fits seamlessly into your life. This
+          questionnaire is designed to understand your unique relationship with
+          food and create a personalized experience that honors your body, your
+          preferences, and your journey.
         </p>
 
         <div className="bg-sage-50 rounded-xl p-6 mb-8 text-left">

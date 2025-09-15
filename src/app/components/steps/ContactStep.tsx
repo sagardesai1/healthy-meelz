@@ -99,7 +99,8 @@ export default function ContactStep({
             Stay Connected
           </h2>
           <p className="text-base sm:text-lg text-sage-700">
-            We'll send you personalized grocery lists and meal planning support
+            We'll text you personalized grocery lists and meal planning tips so
+            you never feel stuck or confused on what to eat
           </p>
         </div>
 
@@ -108,9 +109,6 @@ export default function ContactStep({
           <label className="block text-sm font-medium text-sage-700 mb-2">
             Phone Number <span className="text-red-500">*</span>
           </label>
-          <p className="text-sm text-sage-600 mb-4">
-            For personalized grocery lists and meal planning support
-          </p>
 
           {/* Phone Number Input */}
           <input
@@ -142,17 +140,13 @@ export default function ContactStep({
               {phoneError}
             </p>
           )}
-
-          <p className="text-xs text-sage-500 mt-2">
-            We'll send you personalized grocery lists and meal planning tips
-          </p>
         </div>
 
-        {/* Encouraging Message */}
+        {/* Privacy Reassurance */}
         <div className="bg-coral-50 rounded-xl p-6 mb-8 text-center">
           <p className="text-coral-800 font-medium">
-            "Your phone number helps us send you personalized grocery lists that
-            match your preferences and goals."
+            "We'll never send unwanted texts or spam - only helpful meal
+            planning support when you need it most."
           </p>
         </div>
 
