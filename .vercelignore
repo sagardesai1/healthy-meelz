@@ -1,0 +1,14 @@
+# Exclude Firebase Functions directory from Vercel build
+functions/
+
+# Exclude test files
+tests/
+
+# Exclude debug logs
+firebase-debug.log
+pglite-debug.log
+
+# Exclude Firebase config (not needed for Vercel)
+.firebaserc
+firebase.json
+
