@@ -22,8 +22,10 @@ export default function ContactStep({
   onPrev,
   isLoading,
 }: ContactStepProps) {
+  const [nameError, setNameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   // Initialize phone input only once when component mounts
   useEffect(() => {
@@ -31,6 +33,11 @@ export default function ContactStep({
       setPhoneInput(formData.phoneNumber);
     }
   }, []); // Empty dependency array - only run once
+
+  const handleNameChange = (value: string) => {
+    updateFormData({ name: value });
+    if (nameError) setNameError("");
+  };
 
   const handlePhoneChange = (value: string) => {
     // Only allow digits
@@ -48,6 +55,14 @@ export default function ContactStep({
     if (phoneError) setPhoneError("");
   };
 
+  const validateName = () => {
+    if (!formData.name || formData.name.trim().length < 2) {
+      setNameError("Please enter your full name");
+      return false;
+    }
+    return true;
+  };
+
   const validatePhoneNumber = () => {
     if (!phoneInput || phoneInput.length !== 10) {
       setPhoneError("Please enter a complete 10-digit phone number");
@@ -56,8 +71,27 @@ export default function ContactStep({
     return true;
   };
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (value: string) => {
+    updateFormData({ email: value });
+    if (emailError) setEmailError("");
+  };
+
   const handleNext = () => {
-    if (validatePhoneNumber()) {
+    const nameValid = validateName();
+    const phoneValid = validatePhoneNumber();
+
+    let emailValid = true;
+    if (!formData.email || !validateEmail(formData.email)) {
+      setEmailError("Please enter a valid email address");
+      emailValid = false;
+    }
+
+    if (nameValid && phoneValid && emailValid) {
       onNext();
     }
   };
@@ -69,7 +103,12 @@ export default function ContactStep({
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   };
 
-  const canProceed = phoneInput.length === 10;
+  const canProceed =
+    formData.name &&
+    formData.name.trim().length >= 2 &&
+    phoneInput.length === 10 &&
+    formData.email &&
+    validateEmail(formData.email);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6">
@@ -91,17 +130,54 @@ export default function ContactStep({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
               />
             </svg>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-sage-800 mb-3">
-            Stay Connected
+            Let's Get Started
           </h2>
           <p className="text-base sm:text-lg text-sage-700">
-            We'll text you personalized grocery lists and meal planning tips so
-            you never feel stuck or confused on what to eat
+            Tell us a bit about yourself so we can personalize your meal
+            planning experience
           </p>
+        </div>
+
+        {/* Name Input */}
+        <div className="bg-white rounded-xl p-4 sm:p-6 border border-sage-200 mb-6">
+          <label className="block text-sm font-medium text-sage-700 mb-2">
+            Full Name <span className="text-red-500">*</span>
+          </label>
+
+          <input
+            type="text"
+            value={formData.name || ""}
+            onChange={(e) => handleNameChange(e.target.value)}
+            placeholder="Enter your full name"
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors text-sage-900 ${
+              nameError ? "border-red-300" : "border-sage-300"
+            }`}
+          />
+
+          {/* Error Message */}
+          {nameError && (
+            <p className="text-red-500 text-sm mt-2 flex items-center">
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {nameError}
+            </p>
+          )}
         </div>
 
         {/* Phone Number Input */}
@@ -138,6 +214,44 @@ export default function ContactStep({
                 />
               </svg>
               {phoneError}
+            </p>
+          )}
+        </div>
+
+        {/* Email Input */}
+        <div className="bg-white rounded-xl p-4 sm:p-6 border border-sage-200 mb-6">
+          <label className="block text-sm font-medium text-sage-700 mb-2">
+            Email Address <span className="text-red-500">*</span>
+          </label>
+          <p className="text-sage-600 mb-4">
+            We'll send you personalized meal planning reminders and helpful tips
+          </p>
+
+          <input
+            type="email"
+            value={formData.email || ""}
+            onChange={(e) => handleEmailChange(e.target.value)}
+            placeholder="your.email@example.com"
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-colors text-sage-900 ${
+              emailError ? "border-red-300" : "border-sage-300"
+            }`}
+          />
+          {emailError && (
+            <p className="text-red-500 text-sm mt-2 flex items-center">
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {emailError}
             </p>
           )}
         </div>

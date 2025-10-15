@@ -31,12 +31,12 @@ const ACTIVITY_MULTIPLIERS = {
   "extremely-active": 1.9,
 };
 
-// Macro ratios based on goals
-const MACRO_RATIOS = {
-  "weight-loss": { protein: 0.3, carbs: 0.35, fat: 0.35 }, // Higher protein for muscle preservation
-  "muscle-gain": { protein: 0.25, carbs: 0.45, fat: 0.3 }, // Higher carbs for energy
-  "weight-gain": { protein: 0.2, carbs: 0.5, fat: 0.3 }, // Higher carbs for surplus
-  maintenance: { protein: 0.25, carbs: 0.4, fat: 0.35 }, // Balanced approach
+// Goal adjustment percentages
+const GOAL_ADJUSTMENTS = {
+  "weight-loss": { min: 0.1, max: 0.2 }, // 10-20% deficit
+  "muscle-gain": { min: 0.1, max: 0.15 }, // 10-15% surplus (conservative)
+  "weight-gain": { min: 0.1, max: 0.15 }, // 10-15% surplus
+  maintenance: { min: 0, max: 0 }, // No adjustment
 };
 
 /**
@@ -79,68 +79,94 @@ export function calculateTDEE(bmr: number, activityLevel: string): number {
 
 /**
  * Calculate daily calorie target based on goal
+ * Uses percentage-based adjustments as specified
  */
 export function calculateCalorieTarget(tdee: number, goal: string): number {
-  switch (goal) {
-    case "weight-loss":
-      return Math.round(tdee - 500); // 500 calorie deficit for ~1lb/week loss
-    case "weight-gain":
-      return Math.round(tdee + 300); // 300 calorie surplus for healthy gain
-    case "muscle-gain":
-      return Math.round(tdee + 200); // 200 calorie surplus for lean muscle
-    case "maintenance":
-    default:
-      return tdee;
+  const adjustment =
+    GOAL_ADJUSTMENTS[goal as keyof typeof GOAL_ADJUSTMENTS] ||
+    GOAL_ADJUSTMENTS.maintenance;
+
+  if (goal === "weight-loss") {
+    // Use 15% deficit (middle of 10-20% range) for sustainable weight loss
+    return Math.round(tdee * (1 - 0.15));
+  } else if (goal === "muscle-gain" || goal === "weight-gain") {
+    // Use 12% surplus (middle of 10-15% range) for conservative muscle gain
+    return Math.round(tdee * (1 + 0.12));
+  } else {
+    // Maintenance - no adjustment
+    return tdee;
   }
 }
 
 /**
- * Calculate macro distribution in grams
+ * Calculate macro distribution in grams using protein-per-pound approach
+ * Protein: 0.9-1.1g per lb of body weight
+ * Fat: 20-25% of total calories
+ * Carbs: Remainder of calories
  */
 export function calculateMacroGrams(
   calories: number,
-  macroRatio: { protein: number; carbs: number; fat: number }
+  weightLbs: number,
+  goal: string
 ) {
-  // Protein: 4 calories per gram
-  // Carbs: 4 calories per gram
-  // Fat: 9 calories per gram
+  // Step 1: Calculate protein (0.9-1.1g per lb of body weight)
+  // Use 1.0g per lb as the standard (middle of range)
+  const proteinGrams = Math.round(weightLbs * 1.0);
+  const proteinCalories = proteinGrams * 4; // 4 calories per gram
 
-  const proteinCalories = calories * macroRatio.protein;
-  const carbsCalories = calories * macroRatio.carbs;
-  const fatCalories = calories * macroRatio.fat;
+  // Step 2: Calculate fat (20-25% of total calories)
+  // Use 22.5% as the standard (middle of range)
+  const fatCalories = calories * 0.225;
+  const fatGrams = Math.round(fatCalories / 9); // 9 calories per gram
+
+  // Step 3: Calculate carbs (remainder of calories)
+  const carbsCalories = calories - proteinCalories - fatCalories;
+  const carbsGrams = Math.round(carbsCalories / 4); // 4 calories per gram
+
+  // Calculate actual percentages for display
+  const proteinPercent = Math.round((proteinCalories / calories) * 100);
+  const fatPercent = Math.round((fatCalories / calories) * 100);
+  const carbsPercent = Math.round((carbsCalories / calories) * 100);
 
   return {
-    proteinGrams: Math.round(proteinCalories / 4),
-    carbsGrams: Math.round(carbsCalories / 4),
-    fatGrams: Math.round(fatCalories / 9),
+    proteinGrams,
+    carbsGrams,
+    fatGrams,
+    proteinPercent,
+    fatPercent,
+    carbsPercent,
   };
 }
 
 /**
  * Main function to calculate all macro goals
+ * Follows the 5-step process:
+ * 1. Calculate BMR using Mifflin-St Jeor equation
+ * 2. Calculate TDEE using activity multiplier
+ * 3. Adjust for goal (10-20% deficit for weight loss, 10-15% surplus for muscle gain)
+ * 4. Determine macro split (protein per lb, fat %, carbs remainder)
+ * 5. Convert to grams
  */
 export function calculateMacroGoals(demographics: Demographics): MacroGoals {
-  const { goal } = demographics;
+  const { goal, weight } = demographics;
 
-  // Calculate BMR and TDEE
+  // Step 1: Calculate BMR using Mifflin-St Jeor equation
   const bmr = calculateBMR(demographics);
+
+  // Step 2: Calculate TDEE using activity multiplier
   const tdee = calculateTDEE(bmr, demographics.activityLevel);
 
-  // Calculate calorie target based on goal
+  // Step 3: Adjust for goal
   const calories = calculateCalorieTarget(tdee, goal);
 
-  // Get macro ratios for the goal
-  const macroRatio =
-    MACRO_RATIOS[goal as keyof typeof MACRO_RATIOS] || MACRO_RATIOS.maintenance;
-
-  // Calculate macro grams
-  const macroGrams = calculateMacroGrams(calories, macroRatio);
+  // Step 4 & 5: Calculate macro distribution and convert to grams
+  const macroGrams = calculateMacroGrams(calories, weight, goal);
 
   return {
     calories,
-    protein: Math.round(macroRatio.protein * 100), // Percentage
-    carbs: Math.round(macroRatio.carbs * 100), // Percentage
-    fat: Math.round(macroRatio.fat * 100), // Percentage
+    protein: macroGrams.proteinPercent, // Percentage
+    carbs: macroGrams.carbsPercent, // Percentage
+    fat: macroGrams.fatPercent, // Percentage
     proteinGrams: macroGrams.proteinGrams,
     carbsGrams: macroGrams.carbsGrams,
     fatGrams: macroGrams.fatGrams,
@@ -161,9 +187,14 @@ export function formatMacroGoals(macroGoals: MacroGoals) {
       fat: `${macroGoals.fatGrams}g fat (${macroGoals.fat}%)`,
     },
     details: {
-      bmr: `${macroGoals.bmr} calories (BMR)`,
-      tdee: `${macroGoals.tdee} calories (TDEE)`,
-      target: `${macroGoals.calories} calories (Daily Target)`,
+      bmr: `${macroGoals.bmr} calories (BMR - Mifflin-St Jeor)`,
+      tdee: `${macroGoals.tdee} calories (TDEE - with activity factor)`,
+      target: `${macroGoals.calories} calories (Daily Target - adjusted for goal)`,
+    },
+    calculation: {
+      proteinMethod: "1.0g per lb of body weight",
+      fatMethod: "22.5% of total calories",
+      carbsMethod: "Remainder of calories",
     },
   };
 }

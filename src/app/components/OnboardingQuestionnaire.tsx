@@ -18,6 +18,7 @@ import { saveUserProfile } from "../../lib/userService";
 
 export interface FormData {
   // Contact Information
+  name: string;
   phoneNumber: string;
 
   // Planning Preferences
@@ -37,7 +38,6 @@ export interface FormData {
   mealPeopleCounts: Record<string, number>;
 
   // Food Preferences
-  goToMeals: string;
   breakfastIngredients: string[];
   lunchIngredients: string[];
   dinnerIngredients: string[];
@@ -71,9 +71,13 @@ export interface FormData {
     bmr: number;
     tdee: number;
   };
+
+  // Email Preferences
+  email: string;
 }
 
 const initialFormData: FormData = {
+  name: "",
   phoneNumber: "",
   planningDay: "",
   goals: [],
@@ -83,7 +87,6 @@ const initialFormData: FormData = {
   householdSize: 1,
   mealsPrepared: [],
   mealPeopleCounts: {},
-  goToMeals: "",
   breakfastIngredients: [],
   lunchIngredients: [],
   dinnerIngredients: [],
@@ -98,6 +101,7 @@ const initialFormData: FormData = {
   weight: 0,
   activityLevel: "",
   goal: "",
+  email: "",
 };
 
 const steps = [
